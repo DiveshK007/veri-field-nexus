@@ -14,12 +14,14 @@ import {
   ShoppingCart,
   Menu,
   X,
-  Zap
+  Zap,
+  Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Upload', href: '/upload', icon: Upload },
   { name: 'My Datasets', href: '/datasets', icon: Database },
   { name: 'Marketplace', href: '/marketplace', icon: ShoppingCart },
   { name: 'Earnings', href: '/earnings', icon: Coins },

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import UserStats from '@/components/UserStats';
 import DatasetCard from '@/components/DatasetCard';
 import AISuggestionBox from '@/components/AISuggestionBox';
+import NetworkStatus from '@/components/NetworkStatus';
 import { 
   Search, 
   Filter, 
@@ -81,6 +82,9 @@ const Dashboard = () => {
           Upload Dataset
         </Button>
       </div>
+
+      {/* Network Status */}
+      <NetworkStatus />
 
       {/* Stats */}
       <UserStats />
