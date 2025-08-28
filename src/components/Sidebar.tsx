@@ -15,15 +15,18 @@ import {
   Menu,
   X,
   Zap,
-  Upload
+  Upload,
+  Wallet
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Upload', href: '/upload', icon: Upload },
+  { name: 'Quick Mint', href: '/mint', icon: Zap },
   { name: 'My Datasets', href: '/datasets', icon: Database },
   { name: 'Marketplace', href: '/marketplace', icon: ShoppingCart },
+  { name: 'Wallet', href: '/wallet', icon: Wallet },
   { name: 'Earnings', href: '/earnings', icon: Coins },
   { name: 'Activity', href: '/activity', icon: Activity },
   { name: 'AI Insights', href: '/insights', icon: Sparkles },

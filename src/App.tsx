@@ -15,6 +15,8 @@ import Settings from "./pages/Settings";
 import Insights from "./pages/Insights";
 import Upload from "./pages/Upload";
 import DatasetDetail from "./pages/DatasetDetail";
+import Wallet from "./pages/Wallet";
+import Mint from "./pages/Mint";
 import AnimatedBackground from "./components/AnimatedBackground";
 import Sidebar from "./components/Sidebar";
 
@@ -42,6 +44,8 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/upload" element={<Upload />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/mint" element={<Mint />} />
                 <Route path="/dataset/:id" element={<DatasetDetail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

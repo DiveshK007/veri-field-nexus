@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -64,6 +65,7 @@ const datasets = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('uploaded');
 
@@ -77,7 +79,10 @@ const Dashboard = () => {
             Manage your datasets and track your progress
           </p>
         </div>
-        <Button className="shadow-glow hover:shadow-elevated transition-all duration-300">
+        <Button 
+          onClick={() => navigate('/upload')}
+          className="shadow-glow hover:shadow-elevated transition-all duration-300"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Upload Dataset
         </Button>
@@ -150,7 +155,11 @@ const Dashboard = () => {
             <TabsContent value="purchased" className="space-y-4 mt-6">
               <div className="text-center py-8">
                 <p className="text-muted-foreground">No purchased datasets yet</p>
-                <Button variant="outline" className="mt-4">
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => navigate('/marketplace')}
+                >
                   Browse Marketplace
                 </Button>
               </div>
@@ -159,7 +168,11 @@ const Dashboard = () => {
             <TabsContent value="favorites" className="space-y-4 mt-6">
               <div className="text-center py-8">
                 <p className="text-muted-foreground">No favorites yet</p>
-                <Button variant="outline" className="mt-4">
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => navigate('/marketplace')}
+                >
                   Discover Datasets
                 </Button>
               </div>
@@ -175,15 +188,30 @@ const Dashboard = () => {
           <div className="p-4 rounded-lg bg-surface border border-border/50">
             <h3 className="font-medium text-foreground mb-3">Quick Actions</h3>
             <div className="space-y-2">
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full justify-start gap-2"
+                onClick={() => navigate('/upload')}
+              >
                 <Plus className="h-4 w-4" />
                 Upload New Dataset
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full justify-start gap-2"
+                onClick={() => navigate('/marketplace')}
+              >
                 <Search className="h-4 w-4" />
                 Browse Marketplace
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full justify-start gap-2"
+                onClick={() => navigate('/insights')}
+              >
                 <TrendingUp className="h-4 w-4" />
                 View Analytics
               </Button>

@@ -25,17 +25,15 @@ const NetworkStatus = ({ className }: NetworkStatusProps) => {
   const targetChainName = 'Hardhat Local';
 
   useEffect(() => {
-    // Mock network detection
-    const checkNetwork = () => {
-      const mockChainId = Math.random() > 0.5 ? 31337 : 1; // Random for demo
-      setCurrentChain(mockChainId);
+    // Initialize with stable mock state
+    const initializeNetwork = () => {
       setIsConnected(true);
-      setIsWalletConnected(Math.random() > 0.3); // Random wallet connection
+      setIsWalletConnected(true);
+      // Start with wrong network to demonstrate switching
+      setCurrentChain(1); // Ethereum mainnet initially
     };
 
-    checkNetwork();
-    const interval = setInterval(checkNetwork, 5000);
-    return () => clearInterval(interval);
+    initializeNetwork();
   }, []);
 
   const handleSwitchNetwork = async () => {
@@ -62,6 +60,7 @@ const NetworkStatus = ({ className }: NetworkStatusProps) => {
       // Mock wallet connection
       await new Promise(resolve => setTimeout(resolve, 1000));
       setIsWalletConnected(true);
+      setCurrentChain(1); // Start with mainnet after connecting
       
       toast({
         title: "Wallet Connected",
