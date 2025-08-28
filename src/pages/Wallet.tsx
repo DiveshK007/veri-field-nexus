@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { useAccount, useConnect, useDisconnect, useBalance } from 'wagmi';
+import { injected } from 'wagmi/connectors';
+import { formatEther } from 'viem';
 import {
   Wallet as WalletIcon,
   Copy,
@@ -19,13 +22,16 @@ import {
 
 const Wallet = () => {
   const { toast } = useToast();
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { data: balance } = useBalance({
+    address: address,
+  });
+  
   const [showBalance, setShowBalance] = useState(true);
-  const [isConnected, setIsConnected] = useState(false);
 
-  // Mock wallet data
-  const walletAddress = "0x742d35Cc6B5d5c8...a2E5c0F";
-  const ethBalance = "2.4589";
-  const usdBalance = "4,217.32";
+  // Mock additional data that would come from blockchain
   const creditBalance = "15,420";
 
   const transactions = [
@@ -37,11 +43,10 @@ const Wallet = () => {
 
   const handleConnectWallet = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsConnected(true);
+      connect({ connector: injected() });
       toast({
-        title: "Wallet Connected",
-        description: "Successfully connected to MetaMask",
+        title: "Connecting Wallet",
+        description: "Please approve the connection in your wallet",
       });
     } catch (error) {
       toast({
@@ -53,11 +58,13 @@ const Wallet = () => {
   };
 
   const copyAddress = () => {
-    navigator.clipboard.writeText(walletAddress);
-    toast({
-      title: "Address Copied",
-      description: "Wallet address copied to clipboard",
-    });
+    if (address) {
+      navigator.clipboard.writeText(address);
+      toast({
+        title: "Address Copied",
+        description: "Wallet address copied to clipboard",
+      });
+    }
   };
 
   const handleRefresh = () => {
@@ -86,6 +93,9 @@ const Wallet = () => {
       </div>
     );
   }
+
+  const ethBalance = balance ? formatEther(balance.value) : '0';
+  const usdBalance = balance ? (parseFloat(formatEther(balance.value)) * 2000).toFixed(2) : '0'; // Mock USD rate
 
   return (
     <div className="min-h-screen p-6 bg-background">
@@ -127,20 +137,20 @@ const Wallet = () => {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Address</p>
-                  <div className="flex items-center gap-2">
-                    <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
-                      {walletAddress}
-                    </code>
-                    <Button variant="ghost" size="sm" onClick={copyAddress}>
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Address</p>
+                    <div className="flex items-center gap-2">
+                      <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
+                        {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not connected'}
+                      </code>
+                      <Button variant="ghost" size="sm" onClick={copyAddress}>
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
               </div>
 
               {showBalance && (
@@ -149,7 +159,7 @@ const Wallet = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">ETH Balance</p>
-                      <p className="text-2xl font-bold text-foreground">{ethBalance} ETH</p>
+                      <p className="text-2xl font-bold text-foreground">{parseFloat(ethBalance).toFixed(4)} ETH</p>
                       <p className="text-sm text-muted-foreground">${usdBalance}</p>
                     </div>
                     <div>

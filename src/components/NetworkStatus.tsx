@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useAccount, useConnect, useDisconnect, useChainId, useSwitchChain } from 'wagmi';
+import { hardhat } from 'wagmi/chains';
+import { injected } from 'wagmi/connectors';
 import {
   Wifi,
   WifiOff,
@@ -17,31 +19,18 @@ interface NetworkStatusProps {
 
 const NetworkStatus = ({ className }: NetworkStatusProps) => {
   const { toast } = useToast();
-  const [isConnected, setIsConnected] = useState(false);
-  const [currentChain, setCurrentChain] = useState<number | null>(null);
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const { address, isConnected: isWalletConnected } = useAccount();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
   
-  const targetChainId = 31337; // Hardhat local network
+  const targetChainId = hardhat.id; // Hardhat local network
   const targetChainName = 'Hardhat Local';
-
-  useEffect(() => {
-    // Initialize with stable mock state
-    const initializeNetwork = () => {
-      setIsConnected(true);
-      setIsWalletConnected(true);
-      // Start with wrong network to demonstrate switching
-      setCurrentChain(1); // Ethereum mainnet initially
-    };
-
-    initializeNetwork();
-  }, []);
 
   const handleSwitchNetwork = async () => {
     try {
-      // Mock network switch
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setCurrentChain(targetChainId);
-      
+      switchChain({ chainId: targetChainId });
       toast({
         title: "Network Switched",
         description: `Successfully switched to ${targetChainName}`,
@@ -57,14 +46,10 @@ const NetworkStatus = ({ className }: NetworkStatusProps) => {
 
   const handleConnectWallet = async () => {
     try {
-      // Mock wallet connection
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setIsWalletConnected(true);
-      setCurrentChain(1); // Start with mainnet after connecting
-      
+      connect({ connector: injected() });
       toast({
-        title: "Wallet Connected",
-        description: "Successfully connected to MetaMask",
+        title: "Connecting Wallet",
+        description: "Please approve the connection in your wallet",
       });
     } catch (error) {
       toast({
@@ -84,9 +69,9 @@ const NetworkStatus = ({ className }: NetworkStatusProps) => {
     }
   };
 
-  const isCorrectNetwork = currentChain === targetChainId;
+  const isCorrectNetwork = chainId === targetChainId;
 
-  if (!isConnected) {
+  if (!navigator.onLine) {
     return (
       <Card className={`bg-destructive/10 border-destructive/20 ${className}`}>
         <CardContent className="p-4">
@@ -134,7 +119,7 @@ const NetworkStatus = ({ className }: NetworkStatusProps) => {
               <div>
                 <p className="font-medium text-foreground">Wrong Network</p>
                 <p className="text-sm text-muted-foreground">
-                  Connected to {getNetworkName(currentChain!)} • Switch to {targetChainName}
+                  Connected to {getNetworkName(chainId)} • Switch to {targetChainName}
                 </p>
               </div>
             </div>
@@ -154,13 +139,13 @@ const NetworkStatus = ({ className }: NetworkStatusProps) => {
           <div className="flex items-center gap-3">
             <CheckCircle className="h-5 w-5 text-success" />
             <div>
-              <p className="font-medium text-foreground">Connected to {getNetworkName(currentChain)}</p>
+              <p className="font-medium text-foreground">Connected to {getNetworkName(chainId)}</p>
               <p className="text-sm text-muted-foreground">Ready for blockchain interactions</p>
             </div>
           </div>
           <Badge variant="default" className="gap-1">
             <Wifi className="h-3 w-3" />
-            Chain {currentChain}
+            Chain {chainId}
           </Badge>
         </div>
       </CardContent>
